@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="ec.gob.mdt.ciudadano.activity.PinActivity">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pinText"
+            android:id="@+id/pinAviso"
+            android:layout_weight="0.24"
+            android:layout_marginTop="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/view"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_below="@+id/pinAviso"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="79dp">
+                <EditText
+                    android:id="@+id/pinText"
+                    android:inputType="number"
+                    android:drawableLeft="@drawable/ic_fiber_pin_black_24dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Codigo"
+                    android:layout_width="150dp"
+                    android:maxLength="4"
+                    android:layout_below="@+id/view"
+                    android:gravity="center_vertical" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:layout_width="238dp"
+            android:layout_height="wrap_content"
+            android:text="@string/btnEnviar"
+            android:id="@+id/button_enviar"
+            android:layout_weight="0.03"
+            android:layout_marginTop="68dp"
+            android:layout_below="@+id/view"
+            android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

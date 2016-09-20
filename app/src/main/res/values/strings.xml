@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Aplicación Ciudadano</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+    <string name="login_name">Ingreso</string>
+    <string name="fragmentNoticiasName">Noticias</string>
+    <string name="fragmentDatosPersonalesName">Datos Personales</string>
+    <string name="fragmentMainName">Principal</string>
+
+    <string name="pinText">El pin de seguridad a sido enviado al correo registrado, por favor revisa tu bandeja de entrada y digita tu pin de seguridad para completar el registro.El pin de seguridad a sido enviado al correo registrado, por favor revisa tu bandeja de entrada y digita tu pin de seguridad para completar el registro.El pin de seguridad a sido enviado al correo registrado, por favor revisa tu bandeja de entrada y digita tu pin de seguridad para completar el registro.El pin de seguridad a sido enviado al correo registrado, por favor revisa tu bandeja de entrada y digita tu pin de seguridad para completar el registro</string>
+    <string name="btnEnviar">Enviar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
