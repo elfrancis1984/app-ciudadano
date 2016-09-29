@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import ec.gob.mdt.ciudadano.dto.NoticiaDto;
+import ec.gob.mdt.ciudadano.modelo.ListEntidadNoticiaCiu;
 
 public class Sesion extends Application {
 
@@ -27,6 +28,8 @@ public class Sesion extends Application {
     public String perIdentificacion;
     public String mensaje;
     public String mensajeVersionAntigua;
+
+    public ListEntidadNoticiaCiu listaNoticias;
 
     public static long CANTON_ID;
 

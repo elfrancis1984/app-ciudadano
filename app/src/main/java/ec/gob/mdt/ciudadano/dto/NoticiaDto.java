@@ -7,13 +7,14 @@ public class NoticiaDto {
     private String titulo;
     private String cuerpo;
     private String imagen;
+    private String fecha;
 
-    public NoticiaDto(String titulo, String cuerpo, String imagen) {
+    public NoticiaDto(String titulo, String cuerpo, String imagen, String fecha) {
         this.titulo = titulo;
         this.cuerpo = cuerpo;
         this.imagen = imagen;
+        this.fecha = fecha;
     }
-
 
     public String getTitulo() {
         return titulo;
@@ -35,4 +36,11 @@ public class NoticiaDto {
 
     public void setCuerpo(String cuerpo) {this.cuerpo = cuerpo;}
 
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
 }

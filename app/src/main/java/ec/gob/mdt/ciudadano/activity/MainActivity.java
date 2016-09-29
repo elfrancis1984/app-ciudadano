@@ -27,6 +27,11 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.List;
 
 import ec.gob.mdt.ciudadano.R;
@@ -44,6 +49,11 @@ import ec.gob.mdt.ciudadano.util.Codex;
 import ec.gob.mdt.ciudadano.util.NotifyUtil;
 import ec.gob.mdt.ciudadano.util.PhotoUtils;
 import ec.gob.mdt.ciudadano.util.Properties;
+import ec.gob.mdt.ciudadano.util.RestUtils;
+import ec.gob.mdt.ciudadano.util.Sesion;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -61,8 +71,17 @@ public class MainActivity extends AppCompatActivity
 
     private Intent act;
     private Boolean registrado;
+    private String pin;
+    private String nombres;
+    private String apellidos;
+    private String email;
+    private String token;
     private SharedPreferences sharedPreferences;
+    private ListEntidadNoticiaCiu listaNoticias;
+    private Sesion varibleSesion;
+
     final String BASE_URL = "https://demo9619878.mockable.io/";
+
     private ProgressDialog pd;
 
     Handler handler = new Handler() {
@@ -78,8 +97,14 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         sharedPreferences = getSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA, MODE_PRIVATE);
-        //saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_REGISTRADO, "true"); //TODO Eliminar la linea es solo para simular
+        varibleSesion = (Sesion) getApplicationContext();
+
         registrado = Boolean.valueOf(sharedPreferences.getString(Properties.SHARED_PREFERENCES_USER_DATA_REGISTRADO, ""));
+        pin = sharedPreferences.getString(Properties.SHARED_PREFERENCES_USER_DATA_PIN, "");
+        nombres = sharedPreferences.getString(Properties.SHARED_PREFERENCES_USER_DATA_NOMBRES, "");
+        apellidos = sharedPreferences.getString(Properties.SHARED_PREFERENCES_USER_DATA_APELLIDOS, "");
+        email = sharedPreferences.getString(Properties.SHARED_PREFERENCES_USER_DATA_EMAIL, "");
+        token = sharedPreferences.getString(Properties.SHARED_PREFERENCES_USER_DATA_TOKEN, "");
         //---------------------
         checkIn();
         //---------------------
@@ -99,7 +124,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action" + Codex.codificador("francisco",true), Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "francisco / " + Codex.codificador("francisco",true), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -116,25 +141,30 @@ public class MainActivity extends AppCompatActivity
         //How to change elements in the header programatically
         View headerView = navigationView.getHeaderView(0);
         TextView emailText = (TextView) headerView.findViewById(R.id.email);
-        emailText.setText("jose_chalan@trabajo.gob.ec");
+        TextView userNameText = (TextView) headerView.findViewById(R.id.username);
+
+        userNameText.setText(nombres + " " + apellidos);
+        emailText.setText(email);
 
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     public void generaNotificacion(){
         NotifyUtil nU = new NotifyUtil(getApplicationContext());
-        nU.generaNotificacion();
+        nU.generaNotificacion(listaNoticias);
     }
 
     private void checkIn(){
-        pd = ProgressDialog.show(MainActivity.this, "Por favor espere", "Cargando noticias",true);
+        pd = ProgressDialog.show(MainActivity.this,"Por favor espere", "Cargando noticias",true);
         Thread process = new Thread() {
             @Override
             public void run() {
                 if(!registrado){
                     view_loginActivity();
-                }else{
+                }else if(pin.isEmpty()){
                     consultaNoticias();
+                }else{
+                    view_pinActivity();
                 }
             }
         };
@@ -178,6 +208,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+
+        if(pd!= null)
+            pd.dismiss();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -214,11 +252,9 @@ public class MainActivity extends AppCompatActivity
 
         }
         else if (id == R.id.nav_session) {
-            //nm.cancelAll();
-            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_REGISTRADO, "false");
-            view_loginActivity();
+            cerrarSesion();
         } else if (id == R.id.nav_sql) {
-            consultaNoticias();
+            checkIn();//consultaNoticias();
         }
         else if (id == R.id.nav_notify) {
             generaNotificacion();
@@ -232,6 +268,12 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public void cerrarSesion(){
+        saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_REGISTRADO, "false");
+        saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_TOKEN, "");
+        view_loginActivity();
+    }
+
     public void onFragmentInteraction(Uri uri){
         //you can leave it empty
         Toast.makeText(MainActivity.this,"dasdas",Toast.LENGTH_SHORT).show();
@@ -243,6 +285,12 @@ public class MainActivity extends AppCompatActivity
         finish();
     }
 
+    public void view_pinActivity() {
+        this.act = new Intent(this, PinActivity.class);
+        startActivity(act);
+        finish();
+    }
+
     private void saveSharedPreferences(String key, String value) {
         SharedPreferences.Editor preferencesEditor = sharedPreferences.edit();
         preferencesEditor.putString(key, value);
@@ -250,23 +298,27 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void consultaNoticias(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        NoticiaService service = retrofit.create(NoticiaService.class);
+        NoticiaService service = RestUtils.connectRestAuth(Properties.REST_URL,token).create(NoticiaService.class);
         Call<ListEntidadNoticiaCiu> call = service.getNoticias();
         call.enqueue(new Callback<ListEntidadNoticiaCiu>() {
             @Override
             public void onResponse(Call<ListEntidadNoticiaCiu> call, Response<ListEntidadNoticiaCiu> response) {
-                ListEntidadNoticiaCiu listaNoticias = response.body();
-                cargaNoticiasBd(listaNoticias.getNoticias());
+                if(response.body() == null){
+                    Toast.makeText(getApplicationContext(), Properties.MENSAJE_ERROR_REST_NOTICIAS,Toast.LENGTH_LONG).show();
+                    cerrarSesion();
+                }else {
+                    listaNoticias = response.body();
+                    varibleSesion.listaNoticias = listaNoticias;
+                    cargaNoticiasBd(listaNoticias.getNoticias());
+                }
             }
 
             @Override
             public void onFailure(Call<ListEntidadNoticiaCiu> call, Throwable t) {
-                Log.e("ERROR: ", t.getMessage());
+                Log.e("Error: ",t.getMessage());
+                Toast.makeText(getApplicationContext(), Properties.MENSAJE_ERROR_REST_NOTICIAS,Toast.LENGTH_LONG).show();
+                handler.sendEmptyMessage(0);
             }
         });
     }
@@ -275,7 +327,7 @@ public class MainActivity extends AppCompatActivity
         BaseApp.getInstance().borrarTablaCiuNoticia();
         DaoNoticia.guardarListaNoticia(temp);
         for(EntidadNoticiaCiu noticia: temp){
-            obtenerImagenRest(noticia.getCiuImagen());
+            obtenerImagenRest(noticia.getNotImagen());
         }
         handler.sendEmptyMessage(0);
     }

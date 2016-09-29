@@ -10,6 +10,8 @@ import android.support.v4.app.NotificationCompat;
 
 import ec.gob.mdt.ciudadano.activity.MainActivity;
 import ec.gob.mdt.ciudadano.R;
+import ec.gob.mdt.ciudadano.modelo.EntidadNoticiaCiu;
+import ec.gob.mdt.ciudadano.modelo.ListEntidadNoticiaCiu;
 
 /**
  * Created by francisco on 16/09/16.
@@ -30,15 +32,15 @@ public class NotifyUtil {
         this.ctx = ctx;
     }
 
-    public void generaNotificacion(){
+    public void generaNotificacion(ListEntidadNoticiaCiu noticias){
         nm = (NotificationManager) ctx.getSystemService(ns);
-        notificacion(icono, "Descargar nuevas noticias?","App ciudadano", "Hay nuevas noticias disponibles");
+        notificacion(icono, "Descargar nuevas noticias?","App ciudadano", "Hay nuevas noticias disponibles", noticias);
         nm.cancelAll();
         nm.notify(1, notif);
     }
 
     @SuppressWarnings("deprecation")
-    public void notificacion(int icon, CharSequence textoEstado, CharSequence titulo, CharSequence texto) {
+    public void notificacion(int icon, CharSequence textoEstado, CharSequence titulo, CharSequence texto, ListEntidadNoticiaCiu noticias) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
                         .setSmallIcon(icon)
@@ -52,13 +54,21 @@ public class NotifyUtil {
                         //.setTicker(texto);
 
         NotificationCompat.InboxStyle inBoxStyle = new NotificationCompat.InboxStyle();
-        String[] events = {"noticia 1","noticia 2","noticia 3","noticia 4","noticia 5","noticia 6"};
+        inBoxStyle.setBigContentTitle("Nuevas noticias:");
+        for(EntidadNoticiaCiu noticia: noticias.getNoticias()){
+            inBoxStyle.addLine(noticia.getNotTitulo());
+        }
+        mBuilder.setContentInfo(""+noticias.getNoticias().size());
+        mBuilder.setStyle(inBoxStyle);
+
+
+        /*String[] events = {"noticia 1","noticia 2","noticia 3","noticia 4","noticia 5","noticia 6"};
         inBoxStyle.setBigContentTitle("Nuevas noticias:");
         for (int i=0; i < events.length; i++) {
             inBoxStyle.addLine(events[i]);
         }
         mBuilder.setContentInfo(""+events.length);
-        mBuilder.setStyle(inBoxStyle);
+        mBuilder.setStyle(inBoxStyle);*/
 
         Intent notIntent = new Intent(ctx, MainActivity.class);
         //notIntent.putExtra(DESDE_NOTIFICACION,true);

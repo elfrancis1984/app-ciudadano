@@ -1,7 +1,7 @@
 package ec.gob.mdt.ciudadano.fragment;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -34,6 +34,9 @@ public class ViewerFragment extends Fragment {
     private WebView webview;
     private ProgressDialog progressBar;
     private Activity actividad;
+    private String token;
+
+    private SharedPreferences sharedPreferences;
 
     public ViewerFragment() {
         // Required empty public constructor
@@ -46,6 +49,8 @@ public class ViewerFragment extends Fragment {
 
         actividad = getActivity();
         actividad.setTitle(R.string.fragmentDatosPersonalesName);
+        sharedPreferences = actividad.getSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA, getContext().getApplicationContext().MODE_PRIVATE);
+        token = sharedPreferences.getString(Properties.SHARED_PREFERENCES_USER_DATA_TOKEN, "");
 
         this.webview = (WebView) view.findViewById(R.id.webView);
 
@@ -64,11 +69,11 @@ public class ViewerFragment extends Fragment {
                 return true;
             }
 
-            @Override
+            /*@Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 // TODO Auto-generated method stub
                 super.onPageStarted(view,url, favicon);
-            }
+            }*/
 
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -77,17 +82,17 @@ public class ViewerFragment extends Fragment {
                 }
             }
 
-            @Override
+            /*@Override
             public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
                 // TODO Auto-generated method stub
                 super.doUpdateVisitedHistory(view, url, isReload);
-            }
+            }*/
 
-            @Override
+            /*@Override
             public void onLoadResource(WebView view, String url) {
                 // TODO Auto-generated method stub
                 super.onLoadResource(view, url);
-            }
+            }*/
 
            /* @Override
             public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse){
@@ -96,25 +101,6 @@ public class ViewerFragment extends Fragment {
         });
         if(WebUtils.isServerOnLine(Properties.SERVER_ADDRESS)) {
             webview.loadUrl(Properties.SERVER_ADDRESS);
-            /*webview.requestFocus(View.FOCUS_DOWN);
-            webview.setOnTouchListener(new View.OnTouchListener()
-            {
-                @Override
-                public boolean onTouch(View v, MotionEvent event)
-                {
-                    switch (event.getAction())
-                    {
-                        case MotionEvent.ACTION_DOWN:
-                        case MotionEvent.ACTION_UP:
-                            if (!v.hasFocus())
-                            {
-                                v.requestFocus();
-                            }
-                            break;
-                    }
-                    return false;
-                }
-            });*/
         }else{
             AppCompatActivity activity = (AppCompatActivity) view.getContext();
             MainFragment fragment = new MainFragment();
@@ -127,7 +113,6 @@ public class ViewerFragment extends Fragment {
             }
             Toast.makeText(view.getContext(),"El sistema no esta disponible!",Toast.LENGTH_SHORT).show();
         }
-
         return view;
     }
 

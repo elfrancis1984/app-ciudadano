@@ -7,11 +7,14 @@ import ec.gob.mdt.ciudadano.util.Sesion;
 
 public class BaseApp extends SQLiteOpenHelper {
 
+
+
     static String tablaNoticia = " CREATE TABLE ciu_noticia( " +
-            " ciuId integer  NOT NULL PRIMARY KEY," +
-            " ciuTitulo text NOT NULL, " +
-            " ciuCuerpo  text NOT NULL, " +
-            " ciuImagen  text ) ";
+            " id integer  NOT NULL PRIMARY KEY," +
+            " titulo text NOT NULL, " +
+            " cuerpo text NOT NULL, " +
+            " fecha text NOT NULL, " +
+            " imagen text ) ";
 
     private static BaseApp instance;
 

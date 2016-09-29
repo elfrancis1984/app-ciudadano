@@ -60,8 +60,8 @@ public class NoticiasFragment extends Fragment {
 
         if(items.isEmpty())
             for(EntidadNoticiaCiu noticia : DaoNoticia.getEntidadNoticiaCiu()){
-                items.add(new NoticiaDto(noticia.ciuTitulo, noticia.ciuCuerpo,noticia.ciuImagen));
-                //items.add(new NoticiaDto(noticia.ciuTitulo, noticia.ciuCuerpo,noticia.ciuImagenBlob));
+                items.add(new NoticiaDto(noticia.notTitulo, noticia.notCuerpo,noticia.notImagen,noticia.notFechaActualizacion));
+                //items.add(new NoticiaDto(noticia.notTitulo, noticia.notCuerpo,noticia.ciuImagenBlob));
             }
 
         // Obtener el Recycler

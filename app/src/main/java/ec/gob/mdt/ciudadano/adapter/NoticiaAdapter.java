@@ -1,14 +1,11 @@
 package ec.gob.mdt.ciudadano.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +44,8 @@ public class NoticiaAdapter extends RecyclerView.Adapter<NoticiaAdapter.NoticiaV
     public void onBindViewHolder(NoticiaViewHolder holder, int position) {
         //holder.imagen.setImageBitmap(PhotoUtils.decodeSampledBitmapFromResource(items.get(position).getImagen(),150,150,this.ctx));
         holder.imagen.setImageBitmap(PhotoUtils.retrieveImagenByPathScaled(items.get(position).getImagen(),this.ctx,true,180,190));
-        holder.nombre.setText(Html.fromHtml(items.get(position).getTitulo()));
+        holder.titulo.setText(Html.fromHtml(items.get(position).getTitulo()));
+        holder.fecha.setText(items.get(position).getFecha());
     }
 
     @Override
@@ -58,7 +56,8 @@ public class NoticiaAdapter extends RecyclerView.Adapter<NoticiaAdapter.NoticiaV
     public static class NoticiaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         // Campos respectivos de un item (noticia)
         public ImageView imagen;
-        public TextView nombre;
+        public TextView titulo;
+        public TextView fecha;
         public List<NoticiaDto> lista = new ArrayList<NoticiaDto>();
         public Context ctx;
 
@@ -68,7 +67,8 @@ public class NoticiaAdapter extends RecyclerView.Adapter<NoticiaAdapter.NoticiaV
             this.ctx = ctx;
             v.setOnClickListener(this);
             imagen = (ImageView) v.findViewById(R.id.imagen);
-            nombre = (TextView) v.findViewById(R.id.titulo);
+            titulo = (TextView) v.findViewById(R.id.titulo);
+            fecha = (TextView) v.findViewById(R.id.fecha);
 
         }
 

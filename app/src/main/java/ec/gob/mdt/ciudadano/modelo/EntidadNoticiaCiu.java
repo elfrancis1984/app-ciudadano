@@ -6,58 +6,148 @@ import com.google.gson.annotations.SerializedName;
  * Created by francisco on 06/09/16.
  */
 public class EntidadNoticiaCiu {
+
+    @SerializedName("type")
+    public String tipo;
+
+    @SerializedName("estado")
+    public boolean notEstado;
+
+    @SerializedName("fechaActualizacion")
+    public String notFechaActualizacion;
+
+    @SerializedName("fechaCreacion")
+    public String notFechaCreacion;
+
     @SerializedName("id")
-    public Integer ciuId;
+    public Integer notId;
+
+    @SerializedName("seleccionado")
+    public boolean notSeleccionado;
+
+    @SerializedName("usuarioCreacion")
+    public String notUsuarioCreacion;
+
     @SerializedName("titulo")
-    public String ciuTitulo;
+    public String notTitulo;
+
     @SerializedName("cuerpo")
-    public String ciuCuerpo;
+    public String notCuerpo;
+
     @SerializedName("imagen")
-    public String ciuImagen;
+    public String notImagen;
 
-    public Integer getCiuId() {
-        return ciuId;
+    public Integer getNotId() {
+        return notId;
     }
 
-    public void setCiuId(Integer ciuId) {
-        this.ciuId = ciuId;
+    public void setNotId(Integer notId) {
+        this.notId = notId;
     }
 
-    public String getCiuTitulo() {
-        return ciuTitulo;
+    public String getNotTitulo() {
+        return notTitulo;
     }
 
-    public void setCiuTitulo(String ciuTitulo) {
-        this.ciuTitulo = ciuTitulo;
+    public void setNotTitulo(String notTitulo) {
+        this.notTitulo = notTitulo;
     }
 
-    public String getCiuCuerpo() {
-        return ciuCuerpo;
+    public String getNotCuerpo() {
+        return notCuerpo;
     }
 
-    public void setCiuCuerpo(String ciuCuerpo) {
-        this.ciuCuerpo = ciuCuerpo;
+    public void setNotCuerpo(String notCuerpo) {
+        this.notCuerpo = notCuerpo;
     }
 
-    public String getCiuImagen() {
-        return ciuImagen;
+    public String getNotImagen() {
+        return notImagen;
     }
 
-    public void setCiuImagen(String ciuImagen) {
-        this.ciuImagen = ciuImagen;
+    public void setNotImagen(String notImagen) {
+        this.notImagen = notImagen;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
 
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public boolean isNotEstado() {
+        return notEstado;
+    }
+
+    public void setNotEstado(boolean notEstado) {
+        this.notEstado = notEstado;
+    }
+
+    public String getNotFechaActualizacion() {
+        return notFechaActualizacion;
+    }
+
+    public void setNotFechaActualizacion(String notFechaActualizacion) {
+        this.notFechaActualizacion = notFechaActualizacion;
+    }
+
+    public String getNotFechaCreacion() {
+        return notFechaCreacion;
+    }
+
+    public void setNotFechaCreacion(String notFechaCreacion) {
+        this.notFechaCreacion = notFechaCreacion;
+    }
+
+    public boolean isNotSeleccionado() {
+        return notSeleccionado;
+    }
+
+    public void setNotSeleccionado(boolean notSeleccionado) {
+        this.notSeleccionado = notSeleccionado;
+    }
+
+    public String getNotUsuarioCreacion() {
+        return notUsuarioCreacion;
+    }
+
+    public void setNotUsuarioCreacion(String notUsuarioCreacion) {
+        this.notUsuarioCreacion = notUsuarioCreacion;
+    }
 
     public EntidadNoticiaCiu(){
 
     }
 
-    public EntidadNoticiaCiu(Integer ciuId, String ciuTitulo, String ciuCuerpo, String ciuImagen) {
-        this.ciuId = ciuId;
-        this.ciuTitulo = ciuTitulo;
-        this.ciuCuerpo = ciuCuerpo;
-        this.ciuImagen = ciuImagen;
+    public EntidadNoticiaCiu(String tipo,
+                             boolean notEstado,
+                             String notFechaActualizacion,
+                             String notFechaCreacion,
+                             Integer notId,
+                             boolean notSeleccionado,
+                             String notUsuarioCreacion,
+                             String notTitulo,
+                             String notCuerpo,
+                             String notImagen) {
+        this.tipo = tipo;
+        this.notEstado = notEstado;
+        this.notFechaActualizacion = notFechaActualizacion;
+        this.notFechaCreacion = notFechaCreacion;
+        this.notId = notId;
+        this.notSeleccionado = notSeleccionado;
+        this.notUsuarioCreacion = notUsuarioCreacion;
+        this.notTitulo = notTitulo;
+        this.notCuerpo = notCuerpo;
+        this.notImagen = notImagen;
     }
 
+    public EntidadNoticiaCiu(Integer notId,String notTitulo,String notCuerpo,String notFechaActualizacion,String notImagen) {
+        this.notId = notId;
+        this.notTitulo = notTitulo;
+        this.notCuerpo = notCuerpo;
+        this.notFechaActualizacion = notFechaActualizacion;
+        this.notImagen = notImagen;
+    }
 }

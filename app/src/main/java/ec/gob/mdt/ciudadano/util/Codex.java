@@ -12,8 +12,9 @@ public class Codex {
      *
      * @param cadena
      * @param opcion
-     * @return
+     * @return cadena codificada/decodificada
      */
+
     public static String codificador(String cadena,boolean opcion){
         String access="";
         List<String> simbol = new ArrayList();

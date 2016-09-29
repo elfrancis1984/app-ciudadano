@@ -7,8 +7,11 @@ import android.util.Log;
 
 import ec.gob.mdt.ciudadano.util.DateTimeUtils;
 import ec.gob.mdt.ciudadano.util.NotifyUtil;
+import ec.gob.mdt.ciudadano.util.Sesion;
 
 public class NewsService extends Service {
+    private Sesion varibleSesion;
+
     public NewsService() {
     }
 
@@ -29,8 +32,9 @@ public class NewsService extends Service {
          DateTimeUtils.cron(new Runnable() {
             public void run() {
                 try {
+                    /*varibleSesion = (Sesion) getApplicationContext();
                     NotifyUtil nU = new NotifyUtil(getApplicationContext());
-                    nU.generaNotificacion(); //TODO solo esta de ejemplo
+                    nU.generaNotificacion(varibleSesion.listaNoticias);*/
                 }catch(Exception ex) {
                     ex.printStackTrace(); //or loggger would be better
                 }
