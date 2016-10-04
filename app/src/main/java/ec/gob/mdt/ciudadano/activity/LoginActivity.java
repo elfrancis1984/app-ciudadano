@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,6 +15,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ec.gob.mdt.ciudadano.R;
+import ec.gob.mdt.ciudadano.dao.DaoUsuario;
+import ec.gob.mdt.ciudadano.modelo.RestEntityUsuario;
 import ec.gob.mdt.ciudadano.service.LoginService;
 import ec.gob.mdt.ciudadano.service.NewsService;
 import ec.gob.mdt.ciudadano.util.Properties;
@@ -61,8 +64,8 @@ public class LoginActivity extends AppCompatActivity {
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage("Iniciando sesion...");
             progressDialog.show();
-            LoginService service = RestUtils.connectRest(Properties.REST_URL, Properties.CONTENT_TYPE_TEXT).create(LoginService.class);
 
+            LoginService service = RestUtils.connectRest(Properties.REST_URL, Properties.CONTENT_TYPE_TEXT).create(LoginService.class);
             Call<ResponseBody> call = service.login(cedula,pass);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -72,18 +75,15 @@ public class LoginActivity extends AppCompatActivity {
                             String token = response.body().string();
                             saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_REGISTRADO, "true");
                             saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_TOKEN, token);
+                            iniciaServicioNoticias();
+                            cargaUsuario(cedula);
                             view_mainActivity();
-
-                            /*saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_USER, _cedulaText.getText().toString());
-                            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_NOMBRES, _nameText.getText().toString());
-                            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_APELLIDOS, _surnameText.getText().toString());
-                            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_EMAIL, _emailText.getText().toString());*/
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }else{
                         try {
-                            Toast.makeText(getApplicationContext(), response.errorBody().string(),Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, response.errorBody().string(),Toast.LENGTH_LONG).show();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -93,13 +93,29 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), Properties.MENSAJE_ERROR_REST_LOGIN,Toast.LENGTH_LONG).show();
+                    Toast toast = Toast.makeText(LoginActivity.this, Properties.MENSAJE_ERROR_REST_LOGIN,Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
                     progressDialog.dismiss();
                 }
             });
-            startService(new Intent(this, NewsService.class)); //TODO inicia service noticias
+        }
+    }
+
+    private void cargaUsuario(String identificacion){
+        RestEntityUsuario usuario = DaoUsuario.recuperarUsuario(identificacion);
+        if(usuario != null){
+            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_USER, usuario.getIdentificacion());
+            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_NOMBRES, usuario.getNombre());
+            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_APELLIDOS, usuario.getApellidos());
+            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_EMAIL, usuario.getCorreo());
+            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_PASS, usuario.getContrasenna());
         }
 
+    }
+
+    private void iniciaServicioNoticias(){
+        startService(new Intent(this, NewsService.class)); //TODO inicia service noticias
     }
 
     private boolean isValidUser(String cedula){

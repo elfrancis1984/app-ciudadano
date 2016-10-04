@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="150dp"
     card_view:cardCornerRadius="4dp"
-    card_view:cardBackgroundColor="#602B608A"
+    card_view:cardBackgroundColor="#90F2F2F2"
     card_view:cardElevation="4dp"
     card_view:cardUseCompatPadding="true">
 

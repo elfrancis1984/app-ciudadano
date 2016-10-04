@@ -58,8 +58,9 @@ public class ViewerFragment extends Fragment {
 
         WebSettings settings = webview.getSettings();
         settings.setJavaScriptEnabled(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
         webview.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        webview.addJavascriptInterface(new WebAppInterface(getContext()), "Android");
+        //webview.addJavascriptInterface(new WebAppInterface(getContext()), "Android");
 
         webview.setWebViewClient(new WebViewClient() {
 
@@ -71,8 +72,7 @@ public class ViewerFragment extends Fragment {
 
             /*@Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                // TODO Auto-generated method stub
-                super.onPageStarted(view,url, favicon);
+                progressBar = ProgressDialog.show(getContext(), "Por favor espere", "Cargando...",true);
             }*/
 
             @Override
@@ -94,13 +94,13 @@ public class ViewerFragment extends Fragment {
                 super.onLoadResource(view, url);
             }*/
 
-           /* @Override
+         /*   @Override
             public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse){
-                Log.e("Error web view","cargar la web page!");
+                Toast.makeText(view.getContext(),Properties.MENSAJE_ERROR_SISTEMA_NO_DISPONIBLE,Toast.LENGTH_SHORT).show();
             }*/
         });
-        if(WebUtils.isServerOnLine(Properties.SERVER_ADDRESS)) {
-            webview.loadUrl(Properties.SERVER_ADDRESS);
+        if(WebUtils.pingServer()) {
+            webview.loadUrl(Properties.SERVER_ADDRESS+"?token="+token);
         }else{
             AppCompatActivity activity = (AppCompatActivity) view.getContext();
             MainFragment fragment = new MainFragment();
@@ -111,7 +111,7 @@ public class ViewerFragment extends Fragment {
             if (progressBar.isShowing()) {
                 progressBar.dismiss();
             }
-            Toast.makeText(view.getContext(),"El sistema no esta disponible!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(),Properties.MENSAJE_ERROR_SISTEMA_NO_DISPONIBLE,Toast.LENGTH_LONG).show();
         }
         return view;
     }

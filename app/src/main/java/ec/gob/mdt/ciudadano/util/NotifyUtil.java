@@ -24,7 +24,7 @@ public class NotifyUtil {
     //private static final String DESDE_NOTIFICACION = "desdeNotificacion";
 
     //Defino el icono de la notificacion en la barra de notificacion
-    int icono = R.drawable.icononotificacion;
+    int icono = R.mipmap.iconomdt;// R.drawable.icononotificacion;
 
     Context ctx;
 

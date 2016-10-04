@@ -17,6 +17,7 @@ import java.io.IOException;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import ec.gob.mdt.ciudadano.R;
+import ec.gob.mdt.ciudadano.dao.DaoUsuario;
 import ec.gob.mdt.ciudadano.modelo.RestEntityUsuario;
 import ec.gob.mdt.ciudadano.service.RegistroUsuarioService;
 import ec.gob.mdt.ciudadano.util.Properties;
@@ -128,7 +129,7 @@ public class SignupActivity extends AppCompatActivity {
                     }
                 }else{
                     try {
-                        Toast.makeText(getApplicationContext(), response.errorBody().string(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(SignupActivity.this, response.errorBody().string(),Toast.LENGTH_LONG).show();
                         _signupButton.setEnabled(true);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -139,8 +140,9 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), Properties.MENSAJE_ERROR_REST_SIGNUP,Toast.LENGTH_LONG).show();
+                Toast.makeText(SignupActivity.this, Properties.MENSAJE_ERROR_REST_SIGNUP,Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
+                _signupButton.setEnabled(true);
             }
         });
 
@@ -160,9 +162,20 @@ public class SignupActivity extends AppCompatActivity {
 
 
     public void onSignupSuccess() {
+        guardarUsuarioLocal();
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
         view_pinActivity();
+    }
+
+    private void guardarUsuarioLocal(){
+        RestEntityUsuario temp = new RestEntityUsuario();
+        temp.setIdentificacion(sharedPreferences.getString(Properties.SHARED_PREFERENCES_USER_DATA_USER,""));
+        temp.setNombre(sharedPreferences.getString(Properties.SHARED_PREFERENCES_USER_DATA_NOMBRES,""));
+        temp.setApellidos(sharedPreferences.getString(Properties.SHARED_PREFERENCES_USER_DATA_APELLIDOS,""));
+        temp.setCorreo(sharedPreferences.getString(Properties.SHARED_PREFERENCES_USER_DATA_EMAIL,""));
+        temp.setContrasenna(sharedPreferences.getString(Properties.SHARED_PREFERENCES_USER_DATA_PASS,""));
+        DaoUsuario.guardarUsuario(temp);
     }
 
     private void saveSharedPreferences(String key, String value) {

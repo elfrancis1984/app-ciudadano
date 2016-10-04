@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Aplicación Ciudadano</string>
+    <string name="app_name">Ministerio del Trabajo</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -8,10 +8,10 @@
 
     <string name="fragmentNoticiasName">Noticias</string>
     <string name="fragmentDatosPersonalesName">Datos Personales</string>
-    <string name="fragmentMainName">Principal</string>
+    <string name="fragmentMainName">Menú</string>
 
-    <string name="activitySignupName">Registro</string>
-    <string name="activityLoginName">Inicio Sesión</string>
+    <string name="activitySignupName">Registro Ciudadano</string>
+    <string name="activityLoginName">Aplicación Ciudadana</string>
 
     <string name="pinText">El pin de seguridad a sido enviado al correo registrado, por favor revisa tu bandeja de entrada y digita tu pin de seguridad para completar el registro.El pin de seguridad a sido enviado al correo registrado, por favor revisa tu bandeja de entrada y digita tu pin de seguridad para completar el registro.El pin de seguridad a sido enviado al correo registrado, por favor revisa tu bandeja de entrada y digita tu pin de seguridad para completar el registro.El pin de seguridad a sido enviado al correo registrado, por favor revisa tu bandeja de entrada y digita tu pin de seguridad para completar el registro</string>
 

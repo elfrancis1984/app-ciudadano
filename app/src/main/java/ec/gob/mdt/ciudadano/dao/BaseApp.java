@@ -7,14 +7,19 @@ import ec.gob.mdt.ciudadano.util.Sesion;
 
 public class BaseApp extends SQLiteOpenHelper {
 
-
-
     static String tablaNoticia = " CREATE TABLE ciu_noticia( " +
             " id integer  NOT NULL PRIMARY KEY," +
             " titulo text NOT NULL, " +
             " cuerpo text NOT NULL, " +
             " fecha text NOT NULL, " +
             " imagen text ) ";
+
+    static String tablaUsuario = " CREATE TABLE ciu_usuario( " +
+            " identificacion text  NOT NULL PRIMARY KEY," +
+            " nombre text NOT NULL, " +
+            " apellidos text NOT NULL, " +
+            " correo text NOT NULL, " +
+            " contrasenna text NOT NULL ) ";
 
     private static BaseApp instance;
 
@@ -47,14 +52,21 @@ public class BaseApp extends SQLiteOpenHelper {
     private void crearTodaTabla(SQLiteDatabase db) {
         db.execSQL("PRAGMA foreign_keys=ON");
         db.execSQL(tablaNoticia);
+        db.execSQL(tablaUsuario);
     }
 
     private void eliminarTodaTabla(SQLiteDatabase db) {
         db.execSQL("DROP TABLE ciu_noticia");
+        db.execSQL("DROP TABLE ciu_usuario");
     }
 
     public void borrarTablaCiuNoticia() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM ciu_noticia");
+    }
+
+    public void borrarTablaCiuUsuario() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM ciu_usuario");
     }
 }

@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +52,7 @@ import ec.gob.mdt.ciudadano.util.PhotoUtils;
 import ec.gob.mdt.ciudadano.util.Properties;
 import ec.gob.mdt.ciudadano.util.RestUtils;
 import ec.gob.mdt.ciudadano.util.Sesion;
+import ec.gob.mdt.ciudadano.util.ToastUtil;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -84,13 +86,26 @@ public class MainActivity extends AppCompatActivity
 
     private ProgressDialog pd;
 
-    Handler handler = new Handler() {
+    Handler handlerDismiss = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             pd.dismiss();
         }
     };
 
+    Handler handlerShow = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            pd = ProgressDialog.show(MainActivity.this,"Por favor espere", "Cargando noticias",true);
+//            pd = new ProgressDialog(MainActivity.this);
+//            pd.setTitle("Por favor espere");
+//            pd.setMessage("Cargando noticias");
+//            pd.setProgressStyle(pd.STYLE_HORIZONTAL);
+//            pd.setProgress(0);
+//            pd.setMax(10);
+//            pd.show();
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,8 +139,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "francisco / " + Codex.codificador("francisco",true), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, Codex.codificador("francisco",true), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                ToastUtil.showCustomToast(MainActivity.this,Codex.codificador("francisco",true));
             }
         });
 
@@ -155,14 +170,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void checkIn(){
-        pd = ProgressDialog.show(MainActivity.this,"Por favor espere", "Cargando noticias",true);
+
         Thread process = new Thread() {
             @Override
             public void run() {
                 if(!registrado){
                     view_loginActivity();
                 }else if(pin.isEmpty()){
-                    consultaNoticias();
+                    if(DaoNoticia.numeroFilasNoticia() == 0)
+                        consultaNoticias();
                 }else{
                     view_pinActivity();
                 }
@@ -245,16 +261,18 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.commit();
         }
         else if (id == R.id.nav_noticias) {
-            //Set the fragment initially
-            NoticiasFragment fragment = new NoticiasFragment();
-            fragmentTransaction.replace(R.id.fragment_container, fragment,"frag_noticias").addToBackStack("frag_noticias");
-            fragmentTransaction.commit();
-
+            if(DaoNoticia.numeroFilasNoticia() > 0) {
+                NoticiasFragment fragment = new NoticiasFragment();
+                fragmentTransaction.replace(R.id.fragment_container, fragment, "frag_noticias").addToBackStack("frag_noticias");
+                fragmentTransaction.commit();
+            }else{
+                consultaNoticias();
+            }
         }
         else if (id == R.id.nav_session) {
             cerrarSesion();
         } else if (id == R.id.nav_sql) {
-            checkIn();//consultaNoticias();
+            consultaNoticias();
         }
         else if (id == R.id.nav_notify) {
             generaNotificacion();
@@ -271,6 +289,12 @@ public class MainActivity extends AppCompatActivity
     public void cerrarSesion(){
         saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_REGISTRADO, "false");
         saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_TOKEN, "");
+        saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_USER, "");
+        saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_NOMBRES, "");
+        saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_APELLIDOS, "");
+        saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_EMAIL, "");
+        saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_PASS, "");
+        saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_PIN, "");
         view_loginActivity();
     }
 
@@ -298,7 +322,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void consultaNoticias(){
-
+        handlerShow.sendEmptyMessage(0);
         NoticiaService service = RestUtils.connectRestAuth(Properties.REST_URL,token).create(NoticiaService.class);
         Call<ListEntidadNoticiaCiu> call = service.getNoticias();
         call.enqueue(new Callback<ListEntidadNoticiaCiu>() {
@@ -318,7 +342,7 @@ public class MainActivity extends AppCompatActivity
             public void onFailure(Call<ListEntidadNoticiaCiu> call, Throwable t) {
                 Log.e("Error: ",t.getMessage());
                 Toast.makeText(getApplicationContext(), Properties.MENSAJE_ERROR_REST_NOTICIAS,Toast.LENGTH_LONG).show();
-                handler.sendEmptyMessage(0);
+                handlerDismiss.sendEmptyMessage(0);
             }
         });
     }
@@ -329,7 +353,7 @@ public class MainActivity extends AppCompatActivity
         for(EntidadNoticiaCiu noticia: temp){
             obtenerImagenRest(noticia.getNotImagen());
         }
-        handler.sendEmptyMessage(0);
+        handlerDismiss.sendEmptyMessage(0);
     }
 
     private void obtenerImagenRest(final String codigo) {

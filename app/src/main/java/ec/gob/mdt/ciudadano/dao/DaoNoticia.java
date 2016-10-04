@@ -15,7 +15,7 @@ import ec.gob.mdt.ciudadano.modelo.EntidadNoticiaCiu;
  */
 public abstract class DaoNoticia {
 
-    public static int numeroFilasCatalogo() {
+    public static int numeroFilasNoticia() {
         SQLiteDatabase db = BaseApp.getInstance().getWritableDatabase();
         Cursor c = db.rawQuery("SELECT id FROM ciu_noticia", null);
         int t = c.getCount();
