@@ -3,12 +3,19 @@ package ec.gob.mdt.ciudadano.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -21,6 +28,7 @@ import ec.gob.mdt.ciudadano.service.LoginService;
 import ec.gob.mdt.ciudadano.service.NewsService;
 import ec.gob.mdt.ciudadano.util.Properties;
 import ec.gob.mdt.ciudadano.util.RestUtils;
+import ec.gob.mdt.ciudadano.util.ToastUtil;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText cedulaEditText;
     private EditText passEditText;
+    private Button btnLogin;
     private Intent act;
     private SharedPreferences sharedPreferences;
 
@@ -42,9 +51,16 @@ public class LoginActivity extends AppCompatActivity {
 
         cedulaEditText = (EditText) findViewById(R.id.username);
         passEditText = (EditText) findViewById(R.id.password);
+        btnLogin = (Button) findViewById(R.id.btn_login);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkLogin();
+            }
+        });
     }
 
-    public void checkLogin(View arg0) {
+    public void checkLogin() {
 
         final String cedula = cedulaEditText.getText().toString();
         if(!isValidUser(cedula)){
@@ -62,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         {
             final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
             progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
             progressDialog.setMessage("Iniciando sesion...");
             progressDialog.show();
 
@@ -72,18 +89,28 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                     if(response.raw().code() == 200){
                         try {
-                            String token = response.body().string();
+                            String respuesta = response.body().string();
+                            JsonParser parser = new JsonParser();
+                            JsonObject info = parser.parse(respuesta).getAsJsonObject();
+
                             saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_REGISTRADO, "true");
-                            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_TOKEN, token);
+                            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_USER, cedula);
+                            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_NOMBRES, info.get("nombres").getAsString());
+                            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_APELLIDOS, info.get("apellidos").getAsString());
+                            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_EMAIL, info.get("correo").getAsString());
+                            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_PASS, pass);
+                            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_TOKEN, info.get("token").getAsString());
                             iniciaServicioNoticias();
-                            cargaUsuario(cedula);
+                            getInfoDevice();
+                            //cargaUsuario(cedula);
                             view_mainActivity();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }else{
                         try {
-                            Toast.makeText(LoginActivity.this, response.errorBody().string(),Toast.LENGTH_LONG).show();
+                            ToastUtil.showCustomToast(LoginActivity.this,response.errorBody().string());
+                            //Toast.makeText(LoginActivity.this, response.errorBody().string(),Toast.LENGTH_LONG).show();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -93,23 +120,37 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Toast toast = Toast.makeText(LoginActivity.this, Properties.MENSAJE_ERROR_REST_LOGIN,Toast.LENGTH_LONG);
+                    ToastUtil.showCustomToast(LoginActivity.this,Properties.MENSAJE_ERROR_REST_LOGIN);
+                    /*Toast toast = Toast.makeText(LoginActivity.this, Properties.MENSAJE_ERROR_REST_LOGIN,Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+                    toast.show();*/
                     progressDialog.dismiss();
                 }
             });
         }
     }
 
+    private void getInfoDevice(){
+        Log.w("Info Kernel",System.getProperty("os.version")); // OS version
+        Log.w("Info",android.os.Build.BOARD);
+        Log.w("Info",android.os.Build.BOOTLOADER);
+        Log.w("Info Marca",android.os.Build.BRAND);
+        Log.w("Info Compilacion",android.os.Build.DISPLAY);
+        Log.w("Info",android.os.Build.HARDWARE);
+        Log.w("Info",android.os.Build.HOST);
+        Log.w("Info",android.os.Build.MANUFACTURER);
+        Log.w("Info Android", Build.VERSION.RELEASE);      // API Level
+        Log.w("Info",android.os.Build.DEVICE);           // Device
+        Log.w("Info Modelo",android.os.Build.MODEL);            // Model
+        Log.w("Info",android.os.Build.PRODUCT);
+    }
+
     private void cargaUsuario(String identificacion){
         RestEntityUsuario usuario = DaoUsuario.recuperarUsuario(identificacion);
         if(usuario != null){
-            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_USER, usuario.getIdentificacion());
             saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_NOMBRES, usuario.getNombre());
             saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_APELLIDOS, usuario.getApellidos());
             saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_EMAIL, usuario.getCorreo());
-            saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_PASS, usuario.getContrasenna());
         }
 
     }

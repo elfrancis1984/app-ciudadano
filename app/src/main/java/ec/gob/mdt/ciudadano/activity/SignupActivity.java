@@ -22,6 +22,7 @@ import ec.gob.mdt.ciudadano.modelo.RestEntityUsuario;
 import ec.gob.mdt.ciudadano.service.RegistroUsuarioService;
 import ec.gob.mdt.ciudadano.util.Properties;
 import ec.gob.mdt.ciudadano.util.RestUtils;
+import ec.gob.mdt.ciudadano.util.ToastUtil;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -115,7 +116,7 @@ public class SignupActivity extends AppCompatActivity {
                 if(response.raw().code() == 201){
                     try {
                         String codigo = response.body().string();
-                        Toast.makeText(getApplicationContext(), codigo,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), codigo,Toast.LENGTH_SHORT).show();//TODO borrar es solo para desarrollo
                         saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_REGISTRADO, "true");
                         saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_USER, _cedulaText.getText().toString());
                         saveSharedPreferences(Properties.SHARED_PREFERENCES_USER_DATA_NOMBRES, _nameText.getText().toString());
@@ -129,7 +130,8 @@ public class SignupActivity extends AppCompatActivity {
                     }
                 }else{
                     try {
-                        Toast.makeText(SignupActivity.this, response.errorBody().string(),Toast.LENGTH_LONG).show();
+                        ToastUtil.showCustomToast(SignupActivity.this,response.errorBody().string());
+                        //Toast.makeText(SignupActivity.this, response.errorBody().string(),Toast.LENGTH_LONG).show();
                         _signupButton.setEnabled(true);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -140,7 +142,8 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(SignupActivity.this, Properties.MENSAJE_ERROR_REST_SIGNUP,Toast.LENGTH_LONG).show();
+                ToastUtil.showCustomToast(SignupActivity.this,Properties.MENSAJE_ERROR_REST_SIGNUP);
+                //Toast.makeText(SignupActivity.this, Properties.MENSAJE_ERROR_REST_SIGNUP,Toast.LENGTH_LONG).show();
                 progressDialog.dismiss();
                 _signupButton.setEnabled(true);
             }
@@ -162,7 +165,7 @@ public class SignupActivity extends AppCompatActivity {
 
 
     public void onSignupSuccess() {
-        guardarUsuarioLocal();
+        //guardarUsuarioLocal();
         _signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
         view_pinActivity();
@@ -185,8 +188,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
+        //Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
         _signupButton.setEnabled(true);
     }
 

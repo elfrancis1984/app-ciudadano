@@ -1,8 +1,12 @@
 package ec.gob.mdt.ciudadano.webInterface;
 
 import android.content.Context;
+import android.support.v4.app.FragmentTransaction;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
+
+import ec.gob.mdt.ciudadano.R;
+import ec.gob.mdt.ciudadano.fragment.MainFragment;
 
 /**
  * Created by francisco on 16/09/16.
@@ -10,16 +14,21 @@ import android.widget.Toast;
 public class WebAppInterface {
 
     Context mContext;
+    FragmentTransaction fragmentTransaction;
 
-    /** Instantiate the interface and set the context */
-    public WebAppInterface(Context c) {
+    /** Instantiate the interface and set the context, transaction */
+    public WebAppInterface(Context c, FragmentTransaction f) {
         mContext = c;
+        fragmentTransaction = f;
     }
 
-    /** Show a toast from the web page */
+    /** Interacction from the web page */
     @JavascriptInterface
-    public void showToast(String toast) {
-        Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+    public void interacction(String toast) {
+        MainFragment fragment = new MainFragment();
+        fragmentTransaction.replace(R.id.fragment_container, fragment,"frag_mainFragment");
+        fragmentTransaction.addToBackStack("frag_mainFragment");
+        fragmentTransaction.commit();
     }
 
 }

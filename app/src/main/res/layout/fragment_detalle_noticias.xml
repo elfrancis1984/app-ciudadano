@@ -29,7 +29,7 @@
         <TextView
             android:id="@+id/detTituloNoticia"
             android:padding="10dp"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorPrimaryText"
             android:textStyle="bold"
             android:text="Titulo de la noticia"
             android:layout_width="match_parent"
@@ -45,6 +45,7 @@
         <TextView
             android:id="@+id/detCuerpoNoticia"
             android:text="Detalle de la noticia"
+            android:textColor="@color/colorSecondaryText"
             android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

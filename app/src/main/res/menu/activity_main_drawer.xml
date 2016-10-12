@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_datosPersonales" android:icon="@android:drawable/ic_menu_agenda"
-            android:title="Datos Personales" />
-        <item android:id="@+id/nav_noticias" android:icon="@android:drawable/ic_menu_view"
-            android:title="Noticias" />
-        <item android:id="@+id/nav_sql" android:icon="@android:drawable/ic_menu_manage"
-            android:title="Cargar noticias" />
-        <item android:id="@+id/nav_notify" android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="Generar Notificacion" />
+    <group android:checkableBehavior="single" >
+        <item android:id="@+id/nav_datosPersonales" android:icon="@drawable/ic_playlist_add_check_black_24dp"
+            android:title="@string/menuEstadoLaboral" android:color="@drawable/textselector" />
+        <item android:id="@+id/nav_servicioRenuncia" android:icon="@drawable/ic_description_black_24dp"
+            android:title="@string/menuServicioRenuncia" android:color="@drawable/textselector" />
+        <item android:id="@+id/nav_noticias" android:icon="@drawable/ic_library_books_black_24dp"
+            android:title="@string/menuNoticias" />
     </group>
+       <item android:title="Cuenta">
+            <menu>
+                <group android:checkableBehavior="single" >
+                    <item android:id="@+id/nav_perfil" android:icon="@drawable/ic_account_circle_black_24dp"
+                        android:title="@string/menuPerfil" />
+                    <item android:id="@+id/nav_session" android:icon="@drawable/ic_exit_to_app_black_24dp"
+                        android:title="@string/menuCerrarSesion" />
+                </group>
+            </menu>
+        </item>
 
-   <item android:title="Cuenta">
+    <item android:title="Desarrollo">
         <menu>
-            <item android:id="@+id/nav_session" android:icon="@android:drawable/ic_menu_close_clear_cancel"
-                android:title="Cerrar sesion" />
+            <item android:id="@+id/nav_sql" android:icon="@android:drawable/ic_menu_manage"
+                android:title="Cargar noticias" />
+            <item android:id="@+id/nav_notify" android:icon="@android:drawable/ic_menu_manage"
+                android:title="Generar Notificacion" />
         </menu>
     </item>
 

@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import ec.gob.mdt.ciudadano.R;
 import ec.gob.mdt.ciudadano.util.Properties;
+import ec.gob.mdt.ciudadano.util.ToastUtil;
 import ec.gob.mdt.ciudadano.util.WebUtils;
 import ec.gob.mdt.ciudadano.webInterface.WebAppInterface;
 
@@ -54,13 +56,18 @@ public class ViewerFragment extends Fragment {
 
         this.webview = (WebView) view.findViewById(R.id.webView);
 
+
         progressBar = ProgressDialog.show(getContext(), "Por favor espere", "Cargando...",true);
 
         WebSettings settings = webview.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setAllowUniversalAccessFromFileURLs(true);
         webview.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        //webview.addJavascriptInterface(new WebAppInterface(getContext()), "Android");
+
+
+        AppCompatActivity temp = (AppCompatActivity) view.getContext();
+        FragmentTransaction fragmentTransactionTemp = temp.getSupportFragmentManager().beginTransaction();
+        webview.addJavascriptInterface(new WebAppInterface(getContext(), fragmentTransactionTemp), "Android");
 
         webview.setWebViewClient(new WebViewClient() {
 
@@ -111,7 +118,8 @@ public class ViewerFragment extends Fragment {
             if (progressBar.isShowing()) {
                 progressBar.dismiss();
             }
-            Toast.makeText(view.getContext(),Properties.MENSAJE_ERROR_SISTEMA_NO_DISPONIBLE,Toast.LENGTH_LONG).show();
+            ToastUtil.showCustomToast(view.getContext(),Properties.MENSAJE_ERROR_SISTEMA_NO_DISPONIBLE);
+            //Toast.makeText(view.getContext(),Properties.MENSAJE_ERROR_SISTEMA_NO_DISPONIBLE,Toast.LENGTH_LONG).show();
         }
         return view;
     }

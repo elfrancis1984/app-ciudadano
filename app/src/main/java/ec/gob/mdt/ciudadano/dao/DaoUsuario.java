@@ -40,6 +40,20 @@ public abstract class DaoUsuario {
         }
     }
 
+    public static void actualizarUsuario(RestEntityUsuario usuario) {
+        if (usuario != null) {
+            SQLiteDatabase db = BaseApp.getInstance().getWritableDatabase();
+            String queryUsuario = " UPDATE ciu_usuario set ";
+            queryUsuario += "nombre = '"+usuario.getNombre()+"',";
+            queryUsuario += "apellidos = '"+usuario.getApellidos()+"',";
+            queryUsuario += "correo = '"+usuario.getCorreo()+"',";
+            queryUsuario += "contrasenna = '"+usuario.getContrasenna()+"' ";
+            queryUsuario += "where ";
+            queryUsuario += "identificacion = '"+usuario.getIdentificacion()+"';";
+            db.execSQL(queryUsuario);
+        }
+    }
+
     public static RestEntityUsuario recuperarUsuario(String identificacion){
         SQLiteDatabase db = BaseApp.getInstance().getWritableDatabase();
         RestEntityUsuario tmp = null;

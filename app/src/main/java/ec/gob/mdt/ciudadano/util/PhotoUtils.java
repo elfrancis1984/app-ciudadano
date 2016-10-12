@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.StrictMode;
+import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -60,19 +63,30 @@ public class PhotoUtils {
     }
 
     public static Bitmap retrieveImagenByPath(String name, Context ctx){
-        final File filesDir = ctx.getApplicationContext().getFilesDir();
-        File imgFile = new File(filesDir.getAbsolutePath()+"/" + name +".jpg");
-        return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+        try {
+            final File filesDir = ctx.getApplicationContext().getFilesDir();
+            File imgFile = new File(filesDir.getAbsolutePath()+"/" + name +".jpg");
+            if(imgFile.exists())
+                return BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            else
+                return null;
+        }catch (Exception e){
+            return null;
+        }
     }
 
     public static Bitmap retrieveImagenByPathScaled(String name, Context ctx,  boolean scaled, int width, int height){
-        final File filesDir = ctx.getApplicationContext().getFilesDir();
-        File imgFile = new File(filesDir.getAbsolutePath()+"/" + name +".jpg");
-        Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-        if(scaled)
-            return Bitmap.createScaledBitmap(bitmap, width, height, true);
-        else
-            return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+        try {
+            final File filesDir = ctx.getApplicationContext().getFilesDir();
+            File imgFile = new File(filesDir.getAbsolutePath()+"/" + name +".jpg");
+            Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            if(scaled)
+                return Bitmap.createScaledBitmap(bitmap, width, height, true);
+            else
+                return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+        }catch (Exception e){
+            return null;
+        }
     }
 
     public static Bitmap obtenerImagenUrl(String url){
@@ -100,7 +114,7 @@ public class PhotoUtils {
         FileOutputStream fos = null;
         try{
             fos = new FileOutputStream(myPath);
-            imagen.compress(Bitmap.CompressFormat.JPEG, 10, fos);
+            imagen.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
         }catch (FileNotFoundException ex){
             ex.printStackTrace();
@@ -108,5 +122,42 @@ public class PhotoUtils {
             ex.printStackTrace();
         }
         //return myPath.getAbsolutePath();
+    }
+
+    public static BitmapDrawable getThumbnail(String name, Context ctx){
+
+        final File filesDir = ctx.getApplicationContext().getFilesDir();
+        File imgFile = new File(filesDir.getAbsolutePath()+"/" + name +".jpg");
+
+        Bitmap bitmapOrg = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+        int width = bitmapOrg.getWidth();
+        int height = bitmapOrg.getHeight();
+        int newWidth = 200;
+        int newHeight = 200;
+
+        // calculate the scale - in this case = 0.4f
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+
+        // createa matrix for the manipulation
+        Matrix matrix = new Matrix();
+        // resize the bit map
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // recreate the new Bitmap
+        Bitmap resizedBitmap =  Bitmap.createBitmap(bitmapOrg, 0, 0, width, height, matrix, true);
+
+        // make a Drawable from Bitmap to allow to set the BitMap
+        // to the ImageView, ImageButton or what ever
+        BitmapDrawable bmd = new BitmapDrawable(resizedBitmap);
+
+        return bmd;
+    }
+
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 }

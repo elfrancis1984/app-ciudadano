@@ -14,10 +14,17 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AccentButton" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:textColor">@color/colorWhite</item>
-    </style>
+    <style name="TextLabel" parent="TextAppearance.AppCompat">
+        <!--<item name="android:textColorHint">@color/colorSecondaryText</item>
+        <item name="android:textSize">16dp</item>
+        <item name="colorAccent">@color/colorPrimaryText</item>
+        <item name="colorControlNormal">@color/colorSecondaryText</item>
+        <item name="colorControlActivated">@color/colorPrimaryText</item>-->
+
+        <item name="android:textColorHint">#757575</item>
+        <item name="android:textSize">16dp</item>
+        <item name="colorAccent">#212121</item>
+        <item name="colorControlNormal">#757575</item>
+        <item name="colorControlActivated">#212121</item></style>
 
 </resources>

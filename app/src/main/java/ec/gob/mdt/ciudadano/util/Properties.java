@@ -33,6 +33,8 @@ public class Properties {
     public final static String MENSAJE_ERROR_CEDULA = "Ingrese una cédula de indentidad válida.";
     public final static String MENSAJE_ERROR_PASSWORD = "El password debe contener entre 4 y 10 caracteres alfanuméricos.";
 
+    public final static String MENSAJE_ACTUALIZACION_EXITOSA = "Información actualizada exitosamente.";
+
     public final static String SERVER_ADDRESS = "http://serviciosgidesarrollo.trabajo.gob.ec:8080/ciudadano/movil/indexPaged.xhtml";
     public final static String REST_URL = "http://serviciosgidesarrollo.trabajo.gob.ec:8080/";
     public final static String REST_BASE = "/ciudadano/rest";

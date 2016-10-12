@@ -22,6 +22,7 @@ import ec.gob.mdt.ciudadano.service.NewsService;
 import ec.gob.mdt.ciudadano.service.RegistroUsuarioService;
 import ec.gob.mdt.ciudadano.util.Properties;
 import ec.gob.mdt.ciudadano.util.RestUtils;
+import ec.gob.mdt.ciudadano.util.ToastUtil;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -82,7 +83,8 @@ public class PinActivity extends AppCompatActivity {
                         }
                     }else{
                         try {
-                            Toast.makeText(getApplicationContext(), response.errorBody().string(),Toast.LENGTH_LONG).show();
+                            ToastUtil.showCustomToast(PinActivity.this,response.errorBody().string());
+                            //Toast.makeText(getApplicationContext(), response.errorBody().string(),Toast.LENGTH_LONG).show();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -93,9 +95,10 @@ public class PinActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Log.e("Error: ",t.getMessage());
-                    Toast toast = Toast.makeText(getApplicationContext(), Properties.MENSAJE_ERROR_REST_PIN,Toast.LENGTH_LONG);
+                    ToastUtil.showCustomToast(PinActivity.this,Properties.MENSAJE_ERROR_REST_PIN);
+                    /*Toast toast = Toast.makeText(getApplicationContext(), Properties.MENSAJE_ERROR_REST_PIN,Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+                    toast.show();*/
                     progressDialog.dismiss();
                 }
             });

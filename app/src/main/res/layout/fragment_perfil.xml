@@ -1,0 +1,154 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".fragment.PerfilFragment">
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:src="@drawable/backgroundn"
+        android:scaleType="centerCrop" />
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fitsSystemWindows="true"
+        android:focusable="false">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="24dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:gravity="center_horizontal"
+            android:focusable="false">
+
+            <!-- Avatar Image -->
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/img_perfil"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:src="@drawable/perfil_avatar"
+                app:border_color="#FF000000"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                 />
+
+            <!--  Girar Image -->
+
+            <ImageView
+                android:id="@+id/img_girar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="4dp"
+                android:src="@drawable/ic_autorenew_black_24dp"
+                android:scaleType="centerCrop"
+                android:layout_gravity="center_horizontal"
+                android:visibility="invisible"
+                android:layout_marginRight="75dp"
+                android:layout_marginTop="-25dp" />
+
+            <!--  Name Label -->
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:colorControlActivated="@color/colorPrimaryText"
+                android:colorAccent="@color/colorPrimaryText"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <EditText android:id="@+id/input_name_p"
+                    android:drawableLeft="@drawable/ic_perm_identity_black_24dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryText"
+                    android:inputType="textCapWords"
+                    android:hint="@string/lblNombre" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!--  Surname Label -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <EditText android:id="@+id/input_surname_p"
+                    android:drawableLeft="@drawable/ic_perm_identity_black_24dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryText"
+                    android:inputType="textCapWords"
+                    android:hint="@string/lblApellido" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Email Label -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <EditText android:id="@+id/input_email_p"
+                    android:drawableLeft="@drawable/ic_email_black_24dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryText"
+                    android:inputType="textEmailAddress"
+                    android:hint="@string/lblEmail" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- User Label -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <EditText android:id="@+id/input_cedula_p"
+                    android:drawableLeft="@drawable/ic_account_circle_black_24dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryText"
+                    android:enabled="false"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:hint="@string/lblCedula"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Password Label -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <EditText android:id="@+id/input_password_p"
+                    android:drawableLeft="@drawable/ic_lock_black_24dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryText"
+                    android:inputType="textPassword"
+                    android:hint="@string/lblPassword"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Update Button -->
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_update"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="24dp"
+                android:padding="12dp"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/buttonselector"
+                android:text="@string/btnActualizar"/>
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

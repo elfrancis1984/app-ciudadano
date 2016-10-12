@@ -3,12 +3,12 @@ package ec.gob.mdt.ciudadano.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +20,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,13 +27,9 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import ec.gob.mdt.ciudadano.R;
 import ec.gob.mdt.ciudadano.dao.BaseApp;
 import ec.gob.mdt.ciudadano.dao.DaoNoticia;
@@ -42,20 +37,17 @@ import ec.gob.mdt.ciudadano.dto.ImagenDto;
 import ec.gob.mdt.ciudadano.fragment.DetalleNoticiasFragment;
 import ec.gob.mdt.ciudadano.fragment.MainFragment;
 import ec.gob.mdt.ciudadano.fragment.NoticiasFragment;
+import ec.gob.mdt.ciudadano.fragment.PerfilFragment;
 import ec.gob.mdt.ciudadano.fragment.ViewerFragment;
 import ec.gob.mdt.ciudadano.modelo.EntidadNoticiaCiu;
 import ec.gob.mdt.ciudadano.modelo.ListEntidadNoticiaCiu;
 import ec.gob.mdt.ciudadano.service.NoticiaService;
-import ec.gob.mdt.ciudadano.util.Codex;
 import ec.gob.mdt.ciudadano.util.NotifyUtil;
 import ec.gob.mdt.ciudadano.util.PhotoUtils;
 import ec.gob.mdt.ciudadano.util.Properties;
 import ec.gob.mdt.ciudadano.util.RestUtils;
 import ec.gob.mdt.ciudadano.util.Sesion;
 import ec.gob.mdt.ciudadano.util.ToastUtil;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,7 +58,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ViewerFragment.OnFragmentInteractionListener,
         NoticiasFragment.OnFragmentInteractionListener,
-        DetalleNoticiasFragment.OnFragmentInteractionListener {
+        DetalleNoticiasFragment.OnFragmentInteractionListener,
+        PerfilFragment.OnFragmentInteractionListener{
 
     NavigationView navigationView = null;
     Toolbar toolbar = null;
@@ -81,6 +74,8 @@ public class MainActivity extends AppCompatActivity
     private SharedPreferences sharedPreferences;
     private ListEntidadNoticiaCiu listaNoticias;
     private Sesion varibleSesion;
+    private CircleImageView perfilAvatar;
+    public static final int REQUEST_CAMERA = 1;
 
     final String BASE_URL = "https://demo9619878.mockable.io/";
 
@@ -97,13 +92,6 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void handleMessage(Message msg) {
             pd = ProgressDialog.show(MainActivity.this,"Por favor espere", "Cargando noticias",true);
-//            pd = new ProgressDialog(MainActivity.this);
-//            pd.setTitle("Por favor espere");
-//            pd.setMessage("Cargando noticias");
-//            pd.setProgressStyle(pd.STYLE_HORIZONTAL);
-//            pd.setProgress(0);
-//            pd.setMax(10);
-//            pd.show();
         }
     };
     @Override
@@ -140,7 +128,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 //                Snackbar.make(view, Codex.codificador("francisco",true), Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                ToastUtil.showCustomToast(MainActivity.this,Codex.codificador("francisco",true));
+                ToastUtil.showCustomToast(MainActivity.this,":) Este es un ejemplo de notificación personalizada.");
             }
         });
 
@@ -152,11 +140,18 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-
         //How to change elements in the header programatically
         View headerView = navigationView.getHeaderView(0);
         TextView emailText = (TextView) headerView.findViewById(R.id.email);
         TextView userNameText = (TextView) headerView.findViewById(R.id.username);
+        perfilAvatar = (CircleImageView) headerView.findViewById(R.id.profile_image);
+
+        Bitmap imageBitmapPerfil = PhotoUtils.retrieveImagenByPath(sharedPreferences.getString(Properties.SHARED_PREFERENCES_USER_DATA_USER, ""),this);
+
+        if(imageBitmapPerfil != null)
+            perfilAvatar.setImageBitmap(imageBitmapPerfil);
+        else
+            perfilAvatar.setImageResource(R.drawable.perfil_avatar);
 
         userNameText.setText(nombres + " " + apellidos);
         emailText.setText(email);
@@ -209,12 +204,18 @@ public class MainActivity extends AppCompatActivity
                 super.onBackPressed();
             }
         }
-        int size = navigationView.getMenu().size();
-        for (int i = 0; i < size; i++) {
-            navigationView.getMenu().getItem(i).setChecked(false);
-        }
+        limpiarMenu(navigationView.getMenu());
     }
 
+    private void limpiarMenu(Menu menu){
+        int size = menu.size();
+        for (int i = 0; i < size; i++) {
+            if(menu.getItem(i).hasSubMenu())
+                limpiarMenu(menu.getItem(i).getSubMenu());
+            else
+                menu.getItem(i).setChecked(false);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -277,9 +278,11 @@ public class MainActivity extends AppCompatActivity
         else if (id == R.id.nav_notify) {
             generaNotificacion();
 
-        }/* else if (id == R.id.nav_send) {
-
-        }*/
+        } else if (id == R.id.nav_perfil) {
+            PerfilFragment fragment = new PerfilFragment();
+            fragmentTransaction.replace(R.id.fragment_container, fragment,"frag_perfil").addToBackStack("frag_frag_perfil");
+            fragmentTransaction.commit();
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -329,7 +332,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<ListEntidadNoticiaCiu> call, Response<ListEntidadNoticiaCiu> response) {
                 if(response.body() == null){
-                    Toast.makeText(getApplicationContext(), Properties.MENSAJE_ERROR_REST_NOTICIAS,Toast.LENGTH_LONG).show();
+                    ToastUtil.showCustomToast(MainActivity.this,Properties.MENSAJE_ERROR_REST_NOTICIAS);
+                    //Toast.makeText(getApplicationContext(), Properties.MENSAJE_ERROR_REST_NOTICIAS,Toast.LENGTH_LONG).show();
                     cerrarSesion();
                 }else {
                     listaNoticias = response.body();
@@ -341,7 +345,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onFailure(Call<ListEntidadNoticiaCiu> call, Throwable t) {
                 Log.e("Error: ",t.getMessage());
-                Toast.makeText(getApplicationContext(), Properties.MENSAJE_ERROR_REST_NOTICIAS,Toast.LENGTH_LONG).show();
+                ToastUtil.showCustomToast(MainActivity.this,Properties.MENSAJE_ERROR_REST_NOTICIAS);
+                //Toast.makeText(getApplicationContext(), Properties.MENSAJE_ERROR_REST_NOTICIAS,Toast.LENGTH_LONG).show();
                 handlerDismiss.sendEmptyMessage(0);
             }
         });
@@ -379,4 +384,25 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    PerfilFragment.camara(MainActivity.this);
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    ToastUtil.showCustomToast(this,":( Ocurrio un error inesperado.");
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
 }

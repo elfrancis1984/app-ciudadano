@@ -34,7 +34,7 @@ public class NotifyUtil {
 
     public void generaNotificacion(ListEntidadNoticiaCiu noticias){
         nm = (NotificationManager) ctx.getSystemService(ns);
-        notificacion(icono, "Descargar nuevas noticias?","App ciudadano", "Hay nuevas noticias disponibles", noticias);
+        notificacion(icono, "Descargar nuevas noticias?", ctx.getString(R.string.app_name), "Hay nuevas noticias disponibles", noticias);
         nm.cancelAll();
         nm.notify(1, notif);
     }
@@ -55,10 +55,12 @@ public class NotifyUtil {
 
         NotificationCompat.InboxStyle inBoxStyle = new NotificationCompat.InboxStyle();
         inBoxStyle.setBigContentTitle("Nuevas noticias:");
-        for(EntidadNoticiaCiu noticia: noticias.getNoticias()){
-            inBoxStyle.addLine(noticia.getNotTitulo());
+        if(noticias != null) {
+            for (EntidadNoticiaCiu noticia : noticias.getNoticias()) {
+                inBoxStyle.addLine("- " + noticia.getNotTitulo());
+            }
+            mBuilder.setContentInfo("" + noticias.getNoticias().size());
         }
-        mBuilder.setContentInfo(""+noticias.getNoticias().size());
         mBuilder.setStyle(inBoxStyle);
 
 

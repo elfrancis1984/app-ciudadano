@@ -29,6 +29,8 @@
     <color name="colorIcons">#212121</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorDivider">#BDBDBD</color>
+    <color name="colorPressed">#2196f3</color>
+    <color name="colorToast">#90a4ae</color>
 
 </resources>
 

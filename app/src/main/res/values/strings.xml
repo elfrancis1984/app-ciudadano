@@ -3,12 +3,19 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="menuEstadoLaboral">Estado laboral</string>
+    <string name="menuServicioRenuncia">Servicio de renuncia</string>
+    <string name="menuNoticias">Noticias</string>
+    <string name="menuPerfil">Perfil</string>
+    <string name="menuCerrarSesion">Cerrar sesión</string>
+
     <string name="action_settings">Configuración</string>
     <string name="action_search">Buscar</string>
 
     <string name="fragmentNoticiasName">Noticias</string>
-    <string name="fragmentDatosPersonalesName">Datos Personales</string>
+    <string name="fragmentDatosPersonalesName">Estado laboral</string>
     <string name="fragmentMainName">Menú</string>
+    <string name="fragmentPerfilName">Perfil</string>
 
     <string name="activitySignupName">Registro Ciudadano</string>
     <string name="activityLoginName">Aplicación Ciudadana</string>
@@ -16,6 +23,7 @@
     <string name="pinText">El pin de seguridad a sido enviado al correo registrado, por favor revisa tu bandeja de entrada y digita tu pin de seguridad para completar el registro.El pin de seguridad a sido enviado al correo registrado, por favor revisa tu bandeja de entrada y digita tu pin de seguridad para completar el registro.El pin de seguridad a sido enviado al correo registrado, por favor revisa tu bandeja de entrada y digita tu pin de seguridad para completar el registro.El pin de seguridad a sido enviado al correo registrado, por favor revisa tu bandeja de entrada y digita tu pin de seguridad para completar el registro</string>
 
     <string name="btnEnviar">Enviar</string>
+    <string name="btnActualizar">Actualizar</string>
     <string name="btnLogin">Ingresar</string>
     <string name="btnSignup">Crear Cuenta</string>
 
@@ -27,6 +35,7 @@
     <string name="lblCedula">Cédula</string>
     <string name="lblPassword">Password</string>
     <string name="lblEmail">Email</string>
+    <string name="lblPin">Código</string>
 
     <string name="progresBarTitle">Por favor espere</string>
     <string name="progresBarDetail">Cargando noticias</string>

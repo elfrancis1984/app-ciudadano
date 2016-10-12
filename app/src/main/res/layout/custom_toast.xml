@@ -5,8 +5,8 @@
     android:id="@+id/custom_toast_container"
     android:layout_height="0dp"
     card_view:cardCornerRadius="8dp"
-    card_view:cardBackgroundColor="#2196f3"
-    card_view:cardElevation="4dp"
+    card_view:cardBackgroundColor="@color/colorToast"
+    card_view:cardElevation="1dp"
     card_view:cardUseCompatPadding="true">
     <LinearLayout
         android:orientation="horizontal"
@@ -16,10 +16,11 @@
         <ImageView android:src="@drawable/ic_android_white_24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"/>
+            android:layout_marginRight="8dp"
+            android:layout_gravity="center" />
         <TextView android:id="@+id/text_custom_toast"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:textColor="#FFF"/>
+            android:textColor="@color/colorWhite"/>
     </LinearLayout>
 </android.support.v7.widget.CardView>
